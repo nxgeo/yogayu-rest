@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 
 from environ import Env
@@ -22,6 +23,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
     "users",
 ]
 
@@ -91,3 +93,17 @@ STORAGES = {
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
 
 GS_QUERYSTRING_AUTH = False
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=365),
+}
