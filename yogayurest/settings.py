@@ -82,3 +82,12 @@ USE_I18N = False
 USE_TZ = True
 
 STATIC_URL = "static/"
+
+STORAGES = {
+    "default": {"BACKEND": "storages.backends.gcloud.GoogleCloudStorage"},
+    "staticfiles": {"BACKEND": "storages.backends.gcloud.GoogleCloudStorage"},
+}
+
+GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+
+GS_QUERYSTRING_AUTH = False
