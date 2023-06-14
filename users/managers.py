@@ -1,5 +1,7 @@
+from django.apps import apps
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
+from django.db import transaction
 
 
 class UserManager(BaseUserManager):
@@ -14,11 +16,16 @@ class UserManager(BaseUserManager):
 
         return user
 
-    def create_user(self, email, password, **extra_fields):
+    @transaction.atomic
+    def create_user(self, email, password, is_yoga_user=False, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
 
         user = self._create_user(email, password, **extra_fields)
+
+        if is_yoga_user:
+            YogaUser = apps.get_model("users.YogaUser")
+            YogaUser(user=user).save()
 
         return user
 

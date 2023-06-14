@@ -6,6 +6,7 @@ from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
 from users.managers import UserManager
+from yogalevels.models import YogaLevel
 
 
 def profile_picture_folder(_, filename):
@@ -37,3 +38,31 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.name
+
+
+class YogaUser(models.Model):
+    _INITIAL_POINTS = 0
+
+    @staticmethod
+    def _get_default_yoga_level(initial_points):
+        default_yoga_level = YogaLevel.objects.filter(
+            minimum_points__lte=initial_points
+        ).last()
+        default_yoga_level_pk = getattr(default_yoga_level, "pk", None)
+        return default_yoga_level_pk or models.NOT_PROVIDED
+
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="yoga_user", primary_key=True
+    )
+    total_points = models.PositiveSmallIntegerField(default=_INITIAL_POINTS)
+    yoga_level = models.ForeignKey(
+        YogaLevel,
+        on_delete=models.RESTRICT,
+        default=_get_default_yoga_level(_INITIAL_POINTS),
+    )
+
+    class Meta:
+        db_table = "yoga_user"
+
+    def __str__(self):
+        return self.user.name
