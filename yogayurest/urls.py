@@ -13,4 +13,5 @@ token_patterns = [
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(v1, include(token_patterns)),
+    path(v1, include("yogalevels.urls")),
 ]
