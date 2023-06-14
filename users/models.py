@@ -7,6 +7,7 @@ from django.db import models
 
 from users.managers import UserManager
 from yogalevels.models import YogaLevel
+from yogaposes.models import YogaPose
 
 
 def profile_picture_folder(_, filename):
@@ -60,9 +61,13 @@ class YogaUser(models.Model):
         on_delete=models.RESTRICT,
         default=_get_default_yoga_level(_INITIAL_POINTS),
     )
+    yoga_poses = models.ManyToManyField(YogaPose, through="yogahistories.YogaHistory")
 
     class Meta:
         db_table = "yoga_user"
 
     def __str__(self):
         return self.user.name
+
+    def has_done_yoga_pose(self, yoga_pose_id):
+        return self.yoga_poses.filter(id=yoga_pose_id).exists()

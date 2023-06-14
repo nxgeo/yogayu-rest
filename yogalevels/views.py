@@ -15,5 +15,7 @@ class YogaLevelViewSet(ReadOnlyModelViewSet):
     def list_yoga_poses(self, request, pk):
         yoga_level = self.get_object()
         yoga_level_poses = yoga_level.yogapose_set.all()
-        serializer = YogaPoseSerializer(yoga_level_poses, many=True)
+        serializer = YogaPoseSerializer(
+            yoga_level_poses, many=True, context={"request": request}
+        )
         return Response(serializer.data)
