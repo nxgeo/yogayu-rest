@@ -1,7 +1,10 @@
 from datetime import timedelta
 from pathlib import Path
+from urllib.parse import urlparse
 
 from environ import Env
+
+from yogayurest.urls import v1
 
 env = Env(DEBUG=(bool, False))
 
@@ -14,7 +17,19 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL")
+
+ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
+
+CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+SECURE_SSL_REDIRECT = True
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -123,5 +138,10 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
     "SCHEMA_PATH_PREFIX": "/v[1-5](alpha|beta)",
     "SCHEMA_PATH_PREFIX_TRIM": True,
-    "SERVERS": [{}],
+    "SERVERS": [
+        {
+            "url": f"{CLOUDRUN_SERVICE_URL}/{v1.rstrip('/')}",
+            "description": "v1 Production",
+        }
+    ],
 }
