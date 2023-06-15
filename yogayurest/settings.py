@@ -4,8 +4,6 @@ from urllib.parse import urlparse
 
 from environ import Env
 
-from yogayurest.urls import v1
-
 env = Env(DEBUG=(bool, False))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,9 +17,7 @@ DEBUG = env("DEBUG")
 
 CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL")
 
-ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
-
-CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
+ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).hostname]
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
@@ -140,7 +136,7 @@ SPECTACULAR_SETTINGS = {
     "SCHEMA_PATH_PREFIX_TRIM": True,
     "SERVERS": [
         {
-            "url": f"{CLOUDRUN_SERVICE_URL}/{v1.rstrip('/')}",
+            "url": f"{CLOUDRUN_SERVICE_URL}/v1alpha",
             "description": "v1 Production",
         }
     ],
