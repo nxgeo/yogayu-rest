@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "drf_spectacular",
     "yogalevels",
     "yogaposes",
     "users",
@@ -104,9 +105,23 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=365),
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Yogayu API",
+    "DESCRIPTION": (
+        "Yogayu REST API for Yogayu mobile app. Provides endpoints for managing yoga levels, yoga poses, "
+        "users, and user yoga histories."
+    ),
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_PATH_PREFIX": "/v[1-5](alpha|beta)",
+    "SCHEMA_PATH_PREFIX_TRIM": True,
+    "SERVERS": [{}],
 }
