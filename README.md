@@ -9,7 +9,7 @@ These guidelines will assist you in deploying the project on the Google Cloud Pl
 ### Prerequisites
 
 - Python 3.11.3
-- Cloud SQL with PostgreSQL 15 database engine (publicly accessible)
+- Cloud SQL with PostgreSQL 15 database engine
 - Cloud Storage Bucket with Uniform access control (publicly accessible)
 
 ### Deploying
@@ -17,7 +17,7 @@ These guidelines will assist you in deploying the project on the Google Cloud Pl
 1. Clone the repository into Cloud Shell:
 
     ```
-    git clone https://github.com/nxgeo/yogayu-rest.git
+    git clone https://github.com/Yogayu-Bangkit/yogayu-rest.git
     cd yogayu-rest
     ```
 
