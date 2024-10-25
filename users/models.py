@@ -42,25 +42,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class YogaUser(models.Model):
-    _INITIAL_POINTS = 0
+    INITIAL_POINTS = 0
 
     @staticmethod
-    def _get_default_yoga_level(initial_points):
+    def get_default_yoga_level():
         default_yoga_level = YogaLevel.objects.filter(
-            minimum_points__lte=initial_points
+            minimum_points__lte=YogaUser.INITIAL_POINTS
         ).last()
+
         default_yoga_level_pk = getattr(default_yoga_level, "pk", None)
-        return default_yoga_level_pk or models.NOT_PROVIDED
+
+        if default_yoga_level_pk is None:
+            raise ValueError("No matching level found for the given points")
+
+        return default_yoga_level_pk
 
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="yoga_user", primary_key=True
     )
-    total_points = models.PositiveSmallIntegerField(default=_INITIAL_POINTS)
-    yoga_level = models.ForeignKey(
-        YogaLevel,
-        on_delete=models.RESTRICT,
-        default=_get_default_yoga_level(_INITIAL_POINTS),
-    )
+    total_points = models.PositiveSmallIntegerField(default=INITIAL_POINTS)
+    yoga_level = models.ForeignKey(YogaLevel, on_delete=models.RESTRICT)
     yoga_poses = models.ManyToManyField(YogaPose, through="yogahistories.YogaHistory")
 
     class Meta:
